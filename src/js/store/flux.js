@@ -1,42 +1,47 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			swFav:[],
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
+			
+			getInfoSw: async (resource)=>{
+        
+				try{
+					const response = await fetch(resource);
+					if (response.ok == false) {
+						const error = response.json();
+						throw new Error(error.message);
+					}
+					const body = await response.json();   
+					return body;        
+				}
+				catch(error){
+					console.log(error);
+				}  
 			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
-			},
-			changeColor: (index, color) => {
-				//get the store
+			agregarAFav:(newFav , vista, uid)=>{
+				let flag = false;
 				const store = getStore();
+				for (let i =0; i<store.swFav.length; i++){
+					if (store.swFav[i].name == newFav)
+					flag = true;
+				}
+				if (!flag) setStore({swFav:[...store.swFav,{name: newFav,vista: vista, id:uid}]});		
+			},
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+			eliminarEnFav:(prev)=>{
+				setStore({swFav:[...prev]})
+			},
 
-				//reset the global store
-				setStore({ demo: demo });
+			filtrarFav:(id)=>{
+				const store = getStore();
+				getActions().eliminarEnFav(store.swFav.filter((item,index)=>{
+					if (index != id){            
+						return item
+					}
+				}));
 			}
 		}
 	};

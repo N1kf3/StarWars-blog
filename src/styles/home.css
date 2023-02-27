@@ -1,0 +1,16 @@
+.marge-sup{
+    margin-top: 200px;
+}
+.scroll{
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.card-personaje{
+    width: 100px;
+    min-width: 250px  !important;
+}
+
+.heart-color{
+    color: red;
+}
